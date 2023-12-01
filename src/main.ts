@@ -15,7 +15,7 @@ customSelects.forEach((customSelect) => {
 
   const options = Array.from(select.options);
   const divSelect = createDivElement(
-    options[select.selectedIndex].innerHTML,
+    options[select.selectedIndex].innerText,
     "select-selected"
   );
   customSelect.appendChild(divSelect);
@@ -24,14 +24,14 @@ customSelects.forEach((customSelect) => {
   options.forEach((option, i) => {
     if (!i && !keepDefault) return;
 
-    const divOption = createDivElement(option.innerHTML);
+    const divOption = createDivElement(option.innerText);
 
     divOption.addEventListener("click", function () {
       const optionSelectedIndex = options.findIndex(
-        (option) => option.innerHTML === this.innerHTML
+        (option) => option.innerText === this.innerText
       );
       select.selectedIndex = optionSelectedIndex;
-      divSelect.innerHTML = options[optionSelectedIndex].innerHTML;
+      divSelect.innerText = options[optionSelectedIndex].innerText;
       divOptions.querySelector('.same-as-selected')?.classList.remove("same-as-selected")
       this.classList.add("same-as-selected");
     });
@@ -52,7 +52,7 @@ customSelects.forEach((customSelect) => {
 function createDivElement(html = "", className = "") {
   const div = document.createElement("div");
   div.className = className;
-  div.innerHTML = html;
+  div.innerText = html;
   return div;
 }
 

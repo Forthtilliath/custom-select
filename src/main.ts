@@ -1,12 +1,18 @@
+import "./style.css";
+
 // https://www.w3schools.com/howto/howto_custom_select.asp
 
-const customSelects = document.querySelectorAll(".custom-select");
+const customSelects =
+  document.querySelectorAll<HTMLDivElement>(".custom-select");
 
 /* This is the main function that is creating the custom select box. It is looping through each custom
 select box and creating the divs that will be used to create the custom select box. */
 customSelects.forEach((customSelect) => {
   const keepDefault = customSelect.hasAttribute("keepdefault");
+
   const select = customSelect.querySelector("select");
+  if (!select) throw new Error("Select not found");
+
   const options = Array.from(select.options);
   const divSelect = createDivElement(
     options[select.selectedIndex].innerHTML,
@@ -26,7 +32,7 @@ customSelects.forEach((customSelect) => {
       );
       select.selectedIndex = optionSelectedIndex;
       divSelect.innerHTML = options[optionSelectedIndex].innerHTML;
-      options.forEach((option) => option.classList.remove("same-as-selected"));
+      divOptions.querySelector('.same-as-selected')?.classList.remove("same-as-selected")
       this.classList.add("same-as-selected");
     });
 
@@ -43,7 +49,7 @@ customSelects.forEach((customSelect) => {
  * @param [className] - The class name of the div element.
  * @returns A div element with the class name and inner HTML set.
  */
-function createDivElement(html, className = "") {
+function createDivElement(html = "", className = "") {
   const div = document.createElement("div");
   div.className = className;
   div.innerHTML = html;
@@ -55,11 +61,12 @@ function createDivElement(html, className = "") {
  * clicked on.
  * @param e - the event object
  */
-function handlerClickSelect(e) {
+function handlerClickSelect(e: MouseEvent) {
   e.stopPropagation();
-  closeAllSelect(e.target);
-  e.target.nextSibling.classList.toggle("select-hide");
-  e.target.classList.toggle("select-arrow-active");
+  const el = e.currentTarget as HTMLDivElement;
+  closeAllSelect(el);
+  el.nextElementSibling?.classList.toggle("select-hide");
+  el.classList.toggle("select-arrow-active");
 }
 
 /**
@@ -67,13 +74,14 @@ function handlerClickSelect(e) {
  * the hide class.
  * @param  - The select element that was clicked.
  */
-function closeAllSelect(selectClicked) {
-  const selectSelecteds = document.querySelectorAll(".select-selected");
+function closeAllSelect(selectClicked: HTMLDivElement | MouseEvent) {
+  const selectSelecteds =
+    document.querySelectorAll<HTMLDivElement>(".select-selected");
 
   selectSelecteds.forEach((selectSelected) => {
     if (selectSelected !== selectClicked) {
       selectSelected.classList.remove("select-arrow-active");
-      selectSelected.nextElementSibling.classList.add("select-hide");
+      selectSelected.nextElementSibling?.classList.add("select-hide");
     }
   });
 }
